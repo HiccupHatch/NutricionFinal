@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Nutricion</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="telefono">Telefono</string>
+    <string name="login">Iniciar sesión</string>
+
+    //Menu
+    <string name="registro">Registrar calorías</string>
+    <string name="logout">Cerrar sesión</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="escogerAlimento">Elige un alimento</string>
+    <string name="bienvenida">Bienvenido a la aplicación de Nutrición</string>
+    <string name="autores">Una apliación de L. Unai Fariñas y J. Aarón Morán \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t UPV/EHU 2019</string>
+    <string name="EHU">UPV/EHU 2019</string>
+</resources>

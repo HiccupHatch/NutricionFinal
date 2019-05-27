@@ -85,7 +85,6 @@ public class LoginActivity extends Activity {
 
     }
 
-
     private void LoginUsuario() {
         String email = eEmail.getText().toString();
         String password = ePass.getText().toString();
@@ -158,6 +157,33 @@ public class LoginActivity extends Activity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        String email = acct.getEmail();
+        sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        DatabaseReference dbRef =
+                FirebaseDatabase.getInstance().getReference()
+                        .child("usuario");
+
+        Query usuarios= dbRef.orderByChild("email").equalTo(email);
+
+        usuarios.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    String dni= singleSnapshot.getKey();
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("dni", dni);
+                    String foto = singleSnapshot.child("foto").getValue().toString();
+                    editor.putString("foto", foto);
+                    editor.commit();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)

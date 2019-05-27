@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrarCaloriasFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="fill"
+        android:text="@string/escogerAlimento" />
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_marginTop="25dp"
+        android:layout_width="250dp"
+        android:layout_height="20dp" />
+
+    <TextView
+        android:id="@+id/textTipoComida"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccione el tipo de comida" />
+
+    <Spinner
+        android:id="@+id/spinnerTipoComida"
+        android:layout_marginTop="75dp"
+        android:layout_width="250dp"
+        android:layout_height="20dp" />
+
+    <TextView
+        android:id="@+id/textCantidad"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccione la cantidad" />
+
+    <EditText
+        android:id="@+id/cantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125dp"
+        android:inputType="number"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_marginTop="175dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccione la fecha de la comida" />
+
+    <EditText
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:clickable="true"
+        android:hint="Fecha"/>
+
+    <Button
+        android:id="@+id/registrarCal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:text="Registrar" />
+
+    <TextView
+        android:id="@+id/labelResultado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:text="" />
+</FrameLayout>

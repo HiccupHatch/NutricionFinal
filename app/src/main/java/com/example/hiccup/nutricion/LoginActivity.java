@@ -55,6 +55,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         eEmail = (EditText) findViewById(R.id.txtUsuario);
+        eEmail.requestFocus();
         ePass = (EditText) findViewById(R.id.txtPassword);
         bLogin = (Button) findViewById(R.id.btnLogin);
         bLoginGoogle = (SignInButton) findViewById(R.id.btnLoginGoogle);

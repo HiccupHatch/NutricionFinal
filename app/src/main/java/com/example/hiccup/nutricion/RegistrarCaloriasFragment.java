@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.example.hiccup.nutricion.Models.Alimento;
 import com.example.hiccup.nutricion.Models.Caloria;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.common.util.ProcessUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -64,6 +65,8 @@ public class RegistrarCaloriasFragment extends Fragment {
     private String dni;
     private EditText edittext;
     private ArrayList<Alimento> listaAlimentos = new ArrayList<>();
+    private ArrayList<Caloria> listaCalorias = new ArrayList<>();
+    private Integer idCalMasAlto = 1;
 
     public RegistrarCaloriasFragment() {
         // Required empty public constructor
@@ -105,6 +108,7 @@ public class RegistrarCaloriasFragment extends Fragment {
         final String todayDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         SharedPreferences sharedpreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         final String dni = sharedpreferences.getString("dni","");
+        final String email = sharedpreferences.getString("email","");
 
         DatabaseReference  myRef=FirebaseDatabase.getInstance().getReference();
         myRef.child("alimento").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,7 +116,6 @@ public class RegistrarCaloriasFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
                     Alimento ali = noteDataSnapshot.getValue(Alimento.class);
-                    System.out.println("1"+ ali.getNombre());
                     listaAlimentos.add(ali);
                 }
                 String[] alimentos = new String[listaAlimentos.size()];
@@ -126,7 +129,6 @@ public class RegistrarCaloriasFragment extends Fragment {
 
                     alimentos[i] = "" + codigo + "-" + descripcion + "-" + calorias;
                 }
-                System.out.println("2");
                 final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -138,7 +140,6 @@ public class RegistrarCaloriasFragment extends Fragment {
                         updateLabel();
                     }
                 };
-                System.out.println("3");
                 edittext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -148,7 +149,6 @@ public class RegistrarCaloriasFragment extends Fragment {
                                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                     }
                 });
-                System.out.println("4");
                 spinner.setAdapter(new ArrayAdapter<String>(RegistrarCaloriasFragment.this.getContext(), android.R.layout.simple_list_item_1, alimentos));
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -162,7 +162,6 @@ public class RegistrarCaloriasFragment extends Fragment {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
-                System.out.println("5");
                 String[] listaTipo ={"Desayuno","Almuerzo","Cena"};
                 spinnerTipoComida.setAdapter(new ArrayAdapter<String>(RegistrarCaloriasFragment.this.getContext(), android.R.layout.simple_list_item_1, listaTipo));
                 spinnerTipoComida.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -187,7 +186,6 @@ public class RegistrarCaloriasFragment extends Fragment {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
-                System.out.println("6");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -195,37 +193,86 @@ public class RegistrarCaloriasFragment extends Fragment {
             }
         });
 
-        /*
+
         btnInsertar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Caloria caloria = new Caloria();
-            caloria.setDni(dni);
-            caloria.setCodigoAlimento(codigo);
-            caloria.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
-            caloria.setFecha(fecha);
-            caloria.setTipoComida(tipoComida.toString());
+                //TODO: Get calorias del usuario
+                DatabaseReference  myRef=FirebaseDatabase.getInstance().getReference();
+                myRef.child("calorias").child(dni).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        System.out.println("B: "+ dataSnapshot.getValue());
+                        Caloria cal = null;
+                        int aux = -1;
+                        try{
+                            for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
+                                cal = noteDataSnapshot.getValue(Caloria.class);
+                                System.out.println("1 " + cal.getDniC());
+                                aux = Integer.parseInt(noteDataSnapshot.getKey());
+                                if(aux > idCalMasAlto){
+                                    idCalMasAlto = aux;
+                                }
+                            }
+                        }catch (Exception e){
+                            try{
+                                System.out.println("2" + dataSnapshot.getValue(Caloria.class));
+                                cal = dataSnapshot.getValue(Caloria.class);
+                                idCalMasAlto = Integer.parseInt(dataSnapshot.getKey());
+                            }catch(Exception e1){
 
-            //TODO: Insertar calorias
-            DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("calorias");
-            dbRef2.child(caloria.getDni()).setValue(caloria).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    //TODO: Write was successful
-                    System.out.println("Success");
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //TODO: Write was failure
-                    System.out.println("Failure");
-                }
-            });
+                            }
+                        }
+                        if(cal != null) {
+                            listaCalorias.add(cal);
+                            System.out.println("D: "+cal);
+                        }
+
+                        Caloria caloria = new Caloria();
+                        caloria.setDniC(dni);
+                        caloria.setCodigoAlimento(String.valueOf(codigo));
+                        caloria.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
+                        caloria.setFecha(fecha);
+                        caloria.setTipoComida(tipoComida.toString());
+
+                        boolean esta = false;
+                        System.out.println("Potato "+listaCalorias.get(0).getFecha());
+                        for (Caloria calDeLista: listaCalorias) {
+                            if(caloria.getDniC().equals(calDeLista.getDniC()) && caloria.getFecha().equals(calDeLista.getFecha()) && caloria.getTipoComida().equals(calDeLista.getTipoComida())){
+                                esta = true;
+                                System.out.println(esta);
+                            }
+                        }System.out.println(esta);
+
+                        if(!esta){
+                            DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("calorias");
+                            idCalMasAlto++;
+                            //dbRef2.child(caloria.getDniC()).setValue(idCalMasAlto);
+                            dbRef2.child(caloria.getDniC()).child(idCalMasAlto+"").setValue(caloria).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //TODO: Write was successful
+                                    System.out.println("Success");
+                                    lblResultado.setText("Insertado OK.");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    //TODO: Write was failure
+                                    System.out.println("Failure");
+                                }
+                            });
+                        }else{
+                            System.out.println("Ya está");
+                            lblResultado.setText("No se ha podido insertar.");
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
             }
-        });*/
-
-
+        });
 
         return view;
     }
@@ -250,7 +297,6 @@ public class RegistrarCaloriasFragment extends Fragment {
         }
         int year = myCalendar.get(Calendar.YEAR);; // get the selected year
         fecha = dayString +"-"+ monthString +"-"+ year;
-        System.out.println("cgvh, "+fecha);
 
         edittext.setText(sdf.format(myCalendar.getTime()));
     }

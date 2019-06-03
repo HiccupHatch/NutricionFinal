@@ -1,19 +1,21 @@
 package com.example.hiccup.nutricion.Models;
 
+import java.util.Objects;
+
 public class Caloria {
 
-    private String dni;
+    private String dniC;
     private String fecha;
     private String tipoComida;
-    private Integer codAli;
+    private String codAli;
     private Integer cantidad;
 
-    public String getDni() {
-        return dni;
+    public String getDniC() {
+        return dniC;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setDniC(String dniC) {
+        this.dniC = dniC;
     }
 
     public String getFecha() {
@@ -32,11 +34,11 @@ public class Caloria {
         this.tipoComida = tipoComida;
     }
 
-    public Integer getCodigoAlimento() {
+    public String getCodigoAlimento() {
         return codAli;
     }
 
-    public void setCodigoAlimento(Integer codAli) {
+    public void setCodigoAlimento(String codAli) {
         this.codAli = codAli;
     }
 
@@ -48,4 +50,19 @@ public class Caloria {
         this.cantidad = cantidad;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Caloria caloria = (Caloria) o;
+        return Objects.equals(dniC, caloria.dniC) &&
+                Objects.equals(fecha, caloria.fecha) &&
+                Objects.equals(tipoComida, caloria.tipoComida);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(dniC, fecha, tipoComida);
+    }
 }
